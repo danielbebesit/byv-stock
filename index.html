@@ -2,6 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Consulta Stock BYV</title>
 
 <style>
@@ -70,7 +72,6 @@ Buscar
 
 <script>
 
-// TU GOOGLE SHEETS CSV PUBLICO
 const url =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmc9qXnwJ0tE8qlZu19Bt42cNh-sKqO50KwtR5GKTKeYGeRxM14jZ1VD74u7m_Cbjxk1Zc6PEiqmNb/pub?gid=0&single=true&output=csv";
 
@@ -96,30 +97,38 @@ async function buscar(){
 
         let encontrado = false;
 
-        for(let i=1; i<filas.length; i++){
+        for(let i=0; i<filas.length; i++){
 
             const columnas = filas[i].split(",");
 
-            // COLUMNA A
+            // COLUMNA A = CODIGO
             const codigo = columnas[0]
                 ?.replace(/"/g,"")
                 .trim()
                 .toUpperCase();
 
-            // COLUMNA H
-            const valorH = columnas[7]
+            // COLUMNA B
+            const valorB = columnas[1]
+                ?.replace(/"/g,"")
+                .trim();
+
+            // COLUMNA D
+            const valorD = columnas[3]
                 ?.replace(/"/g,"")
                 .trim();
 
             if(codigo === codigoBuscar){
 
                 resultado.innerHTML = `
-                    <b>Resultado:</b><br><br>
-                    ${valorH}
+                    <b>Columna B:</b><br>
+                    ${valorB}
+                    <br><br>
+
+                    <b>Columna D:</b><br>
+                    ${valorD}
                 `;
 
                 encontrado = true;
-
                 break;
             }
         }
