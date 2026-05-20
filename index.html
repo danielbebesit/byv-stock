@@ -70,12 +70,15 @@ Buscar
 
 </div>
 
+<!-- LIBRERIA CSV -->
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
 <script>
 
 const url =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmc9qXnwJ0tE8qlZu19Bt42cNh-sKqO50KwtR5GKTKeYGeRxM14jZ1VD74u7m_Cbjxk1Zc6PEiqmNb/pub?gid=0&single=true&output=csv";
 
-async function buscar(){
+function buscar(){
 
     const codigoBuscar = document
         .getElementById("codigo")
@@ -87,68 +90,63 @@ async function buscar(){
 
     resultado.innerHTML = "Buscando...";
 
-    try{
+    Papa.parse(url, {
 
-        const response = await fetch(url);
+        download: true,
 
-        const texto = await response.text();
+        complete: function(results){
 
-        const filas = texto.split("\n");
+            const filas = results.data;
 
-        let encontrado = false;
+            let encontrado = false;
 
-        for(let i=0; i<filas.length; i++){
+            for(let i = 1; i < filas.length; i++){
 
-            const columnas = filas[i].split(",");
+                // COLUMNA A
+                const codigo = filas[i][0]
+                    ?.toString()
+                    .trim()
+                    .toUpperCase();
 
-            // COLUMNA A = CODIGO
-            const codigo = columnas[0]
-                ?.replace(/"/g,"")
-                .trim()
-                .toUpperCase();
+                // COLUMNA B
+                const valorB = filas[i][1];
 
-            // COLUMNA B
-            const valorB = columnas[1]
-                ?.replace(/"/g,"")
-                .trim();
+                // COLUMNA D
+                const valorD = filas[i][3];
 
-            // COLUMNA D
-            const valorD = columnas[3]
-                ?.replace(/"/g,"")
-                .trim();
+                if(codigo === codigoBuscar){
 
-            if(codigo === codigoBuscar){
+                    resultado.innerHTML = `
+                        <b>Columna B:</b><br>
+                        ${valorB || ""}
+                        <br><br>
 
-                resultado.innerHTML = `
-                    <b>Columna B:</b><br>
-                    ${valorB}
-                    <br><br>
+                        <b>Columna D:</b><br>
+                        ${valorD || ""}
+                    `;
 
-                    <b>Columna D:</b><br>
-                    ${valorD}
-                `;
+                    encontrado = true;
 
-                encontrado = true;
-                break;
+                    break;
+                }
             }
-        }
 
-        if(!encontrado){
+            if(!encontrado){
+
+                resultado.innerHTML =
+                    "Código no encontrado";
+            }
+        },
+
+        error: function(error){
 
             resultado.innerHTML =
-                "Código no encontrado";
+                "Error leyendo Google Sheets";
 
+            console.log(error);
         }
 
-    }catch(error){
-
-        resultado.innerHTML =
-            "Error leyendo Google Sheets";
-
-        console.log(error);
-
-    }
-
+    });
 }
 
 </script>
