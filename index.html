@@ -2,15 +2,18 @@
 <html lang="es">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Consulta Stock BYV</title>
 
 <style>
 
 body{
-    font-family: Arial;
+    font-family:Arial;
     background:#f4f4f4;
     display:flex;
     justify-content:center;
@@ -89,7 +92,7 @@ button:hover{
 
 </div>
 
-<!-- PAPAPARSE -->
+<!-- LIBRERIA CSV -->
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
 <script>
@@ -121,8 +124,6 @@ function buscar(){
 
             const filas = results.data;
 
-            console.log(filas);
-
             let encontrado = false;
 
             for(let i = 1; i < filas.length; i++){
@@ -140,23 +141,15 @@ function buscar(){
                 const valorD = String(filas[i][3] || "")
                     .trim();
 
-                console.log(
-                    "CODIGO:",
-                    codigo,
-                    "B:",
-                    valorB,
-                    "D:",
-                    valorD
-                );
-
+                // SI ENCUENTRA EL CODIGO
                 if(codigo === codigoBuscar){
 
                     resultado.innerHTML = `
-                        <b>Columna B:</b><br>
+                        <b>Producto:</b><br>
                         ${valorB}
                         <br><br>
 
-                        <b>Columna D:</b><br>
+                        <b>Stock:</b><br>
                         ${valorD}
                     `;
 
