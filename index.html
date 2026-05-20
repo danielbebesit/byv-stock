@@ -4,9 +4,7 @@
 <head>
 
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Consulta Stock BYV</title>
 
@@ -30,11 +28,6 @@ body{
     box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
-h2{
-    text-align:center;
-    margin-bottom:20px;
-}
-
 input{
     width:100%;
     padding:12px;
@@ -56,16 +49,11 @@ button{
     font-size:16px;
 }
 
-button:hover{
-    background:#0056b3;
-}
-
 #resultado{
     margin-top:20px;
     background:#f9f9f9;
     padding:15px;
     border-radius:8px;
-    min-height:50px;
 }
 
 </style>
@@ -76,28 +64,26 @@ button:hover{
 
 <div class="box">
 
-    <h2>Consulta Stock BYV</h2>
+<h2>Consulta Stock BYV</h2>
 
-    <input
-        type="text"
-        id="codigo"
-        placeholder="Ingrese código"
-    >
+<input
+    type="text"
+    id="codigo"
+    placeholder="Ingrese código"
+>
 
-    <button onclick="buscar()">
-        Buscar
-    </button>
+<button onclick="buscar()">
+    Buscar
+</button>
 
-    <div id="resultado"></div>
+<div id="resultado"></div>
 
 </div>
 
-<!-- LIBRERIA CSV -->
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
 <script>
 
-// GOOGLE SHEETS CSV
 const url =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmc9qXnwJ0tE8qlZu19Bt42cNh-sKqO50KwtR5GKTKeYGeRxM14jZ1VD74u7m_Cbjxk1Zc6PEiqmNb/pub?gid=0&single=true&output=csv";
 
@@ -116,40 +102,53 @@ function buscar(){
 
     Papa.parse(url, {
 
-        download: true,
+        download:true,
 
-        skipEmptyLines: true,
+        skipEmptyLines:true,
 
-        complete: function(results){
+        complete:function(results){
 
             const filas = results.data;
 
+            console.log("TODAS LAS FILAS:");
+            console.log(filas);
+
             let encontrado = false;
 
-            for(let i = 1; i < filas.length; i++){
+            for(let i=0; i<filas.length; i++){
 
-                // COLUMNA A = CODIGO
-                const codigo = String(filas[i][0] || "")
+                console.log("FILA:", filas[i]);
+
+                // COLUMNA A
+                const codigo =
+                    String(filas[i][0] || "")
                     .trim()
                     .toUpperCase();
 
                 // COLUMNA B
-                const valorB = String(filas[i][1] || "")
+                const valorB =
+                    String(filas[i][1] || "")
                     .trim();
 
                 // COLUMNA D
-                const valorD = String(filas[i][3] || "")
+                const valorD =
+                    String(filas[i][3] || "")
                     .trim();
 
-                // SI ENCUENTRA EL CODIGO
+                console.log(
+                    "CODIGO:", codigo,
+                    "B:", valorB,
+                    "D:", valorD
+                );
+
                 if(codigo === codigoBuscar){
 
                     resultado.innerHTML = `
-                        <b>Producto:</b><br>
+                        <b>Dato columna B:</b><br>
                         ${valorB}
                         <br><br>
 
-                        <b>Stock:</b><br>
+                        <b>Dato columna D:</b><br>
                         ${valorD}
                     `;
 
@@ -166,7 +165,7 @@ function buscar(){
             }
         },
 
-        error: function(error){
+        error:function(error){
 
             resultado.innerHTML =
                 "Error leyendo Google Sheets";
